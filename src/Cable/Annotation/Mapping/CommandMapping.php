@@ -1,0 +1,183 @@
+<?php
+
+namespace Cable\Annotation\Mapping;
+
+
+use Cable\Annotation\Parser;
+use Cable\Annotation\SetterInterface;
+
+/**
+ * Class ClassMapping
+ * @package Cable\Annotation\Mapping
+ */
+class CommandMapping implements MappingInterface
+{
+
+
+    /**
+     * @var Parser
+     */
+    private $parser;
+
+
+    /**
+     * @var string
+     */
+    public $name;
+
+    /**
+     * @var array
+     */
+    public $required = [];
+
+    /**
+     * @var array
+     */
+    public $default = [];
+
+
+    /**
+     * @var array
+     */
+    public $propertySetter;
+
+    /**
+     * @var array
+     */
+    public $classSetter;
+
+    /**
+     * @var array
+     */
+    public $properties = [];
+
+    /**
+     * Mapping constructor.
+     * @param Parser $parser
+     */
+    public function __construct(Parser $parser)
+    {
+        $this->parser = $parser;
+    }
+
+    /**
+     * @param array $parsed
+     * @param \ReflectionClass $class
+     * @return string
+     */
+    private function getName(array $parsed, \ReflectionClass $class)
+    {
+        if (isset($parsed['Namespace'][0][0])) {
+            $namespace = $parsed['Namespace'][0][0];
+
+            if ('\\' !== substr($namespace, -1)) {
+                $namespace .= '\\';
+            }
+        } else {
+            $namespace = '';
+        }
+
+
+        $name = $parsed['Name'][0][0] ?? $class->getName();
+
+        return $namespace . $name;
+    }
+
+    /**
+     * @param object $object
+     * @throws Parser\Exception\ParserException
+     * @throws \ReflectionException
+     * @return mixed
+     */
+    public function map($object): CommandMapping
+    {
+        $class = new \ReflectionClass($object);
+        $this->parser->setDocument($class->getDocComment());
+        $parsed = $this->parser->parse();
+
+        $this->name  = $this->getName($parsed, $class);
+        $this->classSetter[$this->name] = $this->getSetter($parsed, $object);
+
+
+        $this->prepareProperties($class->getProperties());
+
+
+        // we don't need that anymore, let's save memory
+        $this->parser = null;
+
+        return $this;
+    }
+
+    /**
+     * @param array $properties
+     * @throws Parser\Exception\ParserException
+     */
+    private function prepareProperties(array $properties) : void
+    {
+        foreach ($properties as $property) {
+            /**
+             * @var \ReflectionProperty $property
+             */
+
+            $parsed = $this->parser
+                ->setDocument($property->getDocComment())
+                ->parse();
+
+
+            if (!isset($parsed['Annotation'])) {
+                continue;
+            }
+
+            $name = $property->getName();
+            $this->prepareRequiredDefaultSetter($name, $parsed);
+
+            $this->properties[] = new MappedProperty($property->getName(), $parsed);
+        }
+    }
+
+
+    /**
+     * @param string $name
+     * @param array $parsed
+     */
+    private function prepareRequiredDefaultSetter(string $name, array $parsed) : void
+    {
+        // if properity is required
+        if (isset($parsed['Required'])) {
+            $this->required[] = $name;
+        }
+
+
+        if (isset($parsed['Default'])) {
+            $this->default[$name] = $parsed['Default'][0][0];
+        }
+
+        // if there is no class setter we will use property setters
+        if(!isset($this->classSetter[$this->name])){
+            if (!isset($parsed['Setter'])) {
+                $parsed['Setter'][0][0] = 'set' . mb_convert_case($name, MB_CASE_TITLE);
+            }
+
+            $this->propertySetter[$name] = $parsed['Setter'][0][0];
+        }
+    }
+
+    /**
+     * @param array $parsed
+     * @param $object
+     * @return string|bool
+     */
+    private function getSetter(array $parsed, $object)
+    {
+        if (isset($parsed['Setter'])) {
+            return $parsed['Setter'][0][0];
+        }
+
+        if ($object instanceof SetterInterface) {
+            return 'set';
+        }
+
+
+        return false;
+    }
+}

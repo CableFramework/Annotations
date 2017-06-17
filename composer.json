@@ -1,0 +1,21 @@
+{
+    "name": "cable/cable-annotations",
+    "description": "Annotations library for cable framework",
+    "type": "library",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "vahit",
+            "email": "vahit.serif119@gmail.com"
+        }
+    ],
+    "autoload": {
+        "psr-4": {
+            "Cable\\Annotation\\": "src/Cable/Annotation"
+        }
+    },
+    "minimum-stability": "stable",
+    "require": {
+        "psr/container": "^1.0"
+    }
+}

@@ -1,0 +1,24 @@
+<?php
+
+namespace Cable\Annotation\Mapping;
+
+
+class MappedMethod extends Mapped
+{
+
+    /**
+     * @var string
+     */
+    public $name;
+
+    /**
+     * MappedProperty constructor.
+     * @param string $name
+     * @param array $mapped
+     */
+    public function __construct(string $name,array $mapped = [])
+    {
+        $this->name = $name;
+        $this->mapped = $mapped;
+    }
+}
