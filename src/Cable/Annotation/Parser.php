@@ -69,7 +69,7 @@ class Parser implements ParserInterface
      * @param string $document
      * @return string
      */
-    private function cleanStartAndEnding(string $document): string
+    private function cleanStarting(string $document): string
     {
         return str_replace(array('/**', '*/'), '', $document);
     }
@@ -120,7 +120,6 @@ class Parser implements ParserInterface
         if (preg_match_all($re, $str, $matches)) {
             $count = count($matches[0]);
 
-
             for ($i = 0; $i < $count; $i++) {
                 [$match, $cmd] = $this->findCommand($i, $matches);
                 ++$i;
@@ -148,13 +147,11 @@ class Parser implements ParserInterface
     public function parse()
     {
         $document = $this->document;
-
         // if comment not started with /** we will throw an exception
         $this->checkCommentIsValid();
-
         // search and replace starting and ending charecters
-        $document = $this->cleanStartAndEnding($document);
 
+        $document = $this->cleanStarting($document);
         // get all lines
         $lines = explode(PHP_EOL, $document);
 
@@ -162,14 +159,25 @@ class Parser implements ParserInterface
         if (!empty($this->skip)) {
             $lines = $this->filterSkip($lines);
         }
+
         // filter empty ones
-        $lines = $this->cleanWildcard(
-            $this->filterEmptyLines($lines)
-        );
+        $lines = $this->filterEmptyLines($lines);
+
 
         return $this->directParse(
-            implode(PHP_EOL, $lines)
+            $this->cleanWildcard(
+                implode(PHP_EOL, $lines)
+            )
         );
+    }
+
+    /**
+     * @param string $command
+     * @return string
+     */
+    private function cleanWildcard(string $command) : string
+    {
+        return str_replace('*', '', $command);
     }
 
 
@@ -189,20 +197,6 @@ class Parser implements ParserInterface
             return true;
         });
     }
-
-    /**
-     * @param array $lines
-     * @return array
-     */
-    private function cleanWildcard(array $lines): array
-    {
-        return array_map(function (string $line) {
-            $line = str_replace('*', '', $line);
-
-            return trim($line);
-        }, $lines);
-    }
-
 
     /**
      * filter lines if they empty

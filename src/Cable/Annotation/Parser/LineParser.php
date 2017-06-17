@@ -52,7 +52,7 @@ class LineParser implements ParserInterface
 
         if (false !== preg_match("#\((.*?)\)#", $cmd, $matches)) {
             $parse = !empty($matches) ?
-                (new ParameterParser($command, $matches[1]))->parse() :
+                (new ParameterGroupParser($command, $matches[1]))->parse() :
                 [];
         }
 

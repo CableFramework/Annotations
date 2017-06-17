@@ -93,7 +93,7 @@ class AnnotationParser implements ParserInterface
      */
     public function parse()
     {
-        $parameterParser = new ParameterParser($this->getCommand(), $this->getString());
+        $parameterParser = new ParameterGroupParser($this->getCommand(), $this->getString());
 
 
         return $parameterParser->parse();
