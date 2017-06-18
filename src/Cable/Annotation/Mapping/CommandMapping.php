@@ -3,7 +3,8 @@
 namespace Cable\Annotation\Mapping;
 
 
-use Cable\Annotation\Parser;
+use Cable\Annotation\Parser\Exception\ParserException;
+use Cable\Annotation\Parser\ParserInterface;
 use Cable\Annotation\SetterInterface;
 
 /**
@@ -53,9 +54,9 @@ class CommandMapping implements MappingInterface
 
     /**
      * Mapping constructor.
-     * @param Parser $parser
+     * @param ParserInterface $parser
      */
-    public function __construct(Parser $parser)
+    public function __construct(ParserInterface $parser)
     {
         $this->parser = $parser;
     }
@@ -85,7 +86,7 @@ class CommandMapping implements MappingInterface
 
     /**
      * @param object $object
-     * @throws Parser\Exception\ParserException
+     * @throws ParserException
      * @throws \ReflectionException
      * @return mixed
      */
@@ -110,7 +111,7 @@ class CommandMapping implements MappingInterface
 
     /**
      * @param array $properties
-     * @throws Parser\Exception\ParserException
+     * @throws ParserException
      */
     private function prepareProperties(array $properties) : void
     {

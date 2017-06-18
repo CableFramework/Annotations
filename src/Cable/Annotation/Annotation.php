@@ -6,6 +6,7 @@ namespace Cable\Annotation;
 use Cable\Annotation\Mapping\CommandMapping;
 use Cable\Annotation\Mapping\MappedProperty;
 use Cable\Annotation\Parser\Exception\ParserException;
+use Cable\Annotation\Parser\ParserInterface;
 use Psr\Container\ContainerInterface;
 
 class Annotation
@@ -22,7 +23,7 @@ class Annotation
     private static $container;
 
     /**
-     * @var Parser
+     * @var ParserInterface
      */
     private $parser;
 
@@ -68,9 +69,9 @@ class Annotation
 
     /**
      * Annotation constructor.
-     * @param Parser $parser
+     * @param DocumentedParserInterface $parser
      */
-    public function __construct(Parser $parser)
+    public function __construct(DocumentedParserInterface $parser)
     {
         $this->parser = $parser;
 
@@ -113,6 +114,7 @@ class Annotation
      */
     public function executeMethod(\ReflectionMethod $method): array
     {
+
         return $this->parse($method->getDocComment())
             ->execute();
     }
@@ -148,14 +150,20 @@ class Annotation
         $classExecuted = $this->parse($classReflection->getDocComment())
             ->execute();
 
+
         $bag->set(
             'properties',
             $this->executeProperties($classReflection->getProperties())
         );
 
+        $methods = $classReflection->getMethods();
+
+
         $bag->set('methods',
-            $this->executeMethods($classReflection->getMethods())
+            $this->executeMethods($methods)
         );
+
+
 
         foreach ($classExecuted as $item => $value) {
             $bag->set($item, $value);
@@ -178,12 +186,18 @@ class Annotation
 
 
         if (!empty($methods)) {
+
             foreach ($methods as $method) {
+
+
                 $executed = $this->executeMethod($method);
 
                 foreach ($executed as $item => $values) {
 
-                    $bag->set($item, $values);
+                    $bag->set($item, array(
+                        'from' => $method->getDeclaringClass()->getName().'::'.$method->getName(),
+                        'value' => $values
+                    ));
                 }
             }
         }
@@ -193,6 +207,7 @@ class Annotation
     }
 
     /**
+     *
      * @param \ReflectionProperty[] $properties
      * @throws ParserException
      * @throws CommandNotFoundException
@@ -209,7 +224,12 @@ class Annotation
                 $executed = $this->executeProperty($property);
 
                 foreach ($executed as $item => $values) {
-                    $bag->set($item, $values);
+                    $bag->set($item, array(
+                        'from' =>
+                            $property->getDeclaringClass()
+                                ->getName().'->'.$property->getName(),
+                        'value' => $values
+                    ));
                 }
             }
         }

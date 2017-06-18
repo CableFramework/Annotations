@@ -118,6 +118,17 @@ foreach($methods->Test() as $test){
 
 ### giving objects into data
 
+
+#### Saving Container
+
+You can give any psr-11 container into annotation
+
+```php
+
+Annotation::setContainer($container);
+
+``
+
 ```php
 
      /**

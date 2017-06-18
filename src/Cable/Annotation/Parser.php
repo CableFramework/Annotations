@@ -3,15 +3,13 @@
 namespace Cable\Annotation;
 
 use Cable\Annotation\Parser\AnnotationParser;
-use Cable\Annotation\Parser\CommandParser;
 use Cable\Annotation\Parser\Exception\ParserException;
-use Cable\Annotation\Parser\ParserInterface;
 
 /**
  * Class Parser
  * @package Cable\Annotation
  */
-class Parser implements ParserInterface
+class Parser implements DocumentedParserInterface
 {
     /**
      * @var string
@@ -81,7 +79,7 @@ class Parser implements ParserInterface
      * @param array $matches
      * @return array
      */
-    private function findCommand(int $i, array $matches)
+    private function findCommand(int $i, array $matches): array
     {
         $match = $matches[0][$i];
         $cmd = $matches['function'][$i] ?? '';
@@ -101,7 +99,7 @@ class Parser implements ParserInterface
         $string = $matches[0][$i] ?? '';
 
 
-        return substr($string, 1, strlen($string) - 2);
+        return substr($string, 1, -1);
     }
 
     /**
@@ -146,6 +144,7 @@ class Parser implements ParserInterface
     public function parse()
     {
         $document = $this->document;
+
         // if comment not started with /** we will throw an exception
         $this->checkCommentIsValid();
         // search and replace starting and ending charecters

@@ -6,7 +6,6 @@ namespace Cable\Annotation\Parser;
 use Cable\Annotation\Annotation;
 use Cable\Annotation\CommandBag;
 use Cable\Annotation\CommandNotFoundException;
-use Cable\Annotation\ContainerNotFoundException;
 use Cable\Annotation\Parser\Exception\ParserException;
 use Cable\Annotation\RequiredArgumentException;
 
@@ -142,46 +141,19 @@ class ParameterParser implements ParserInterface
      */
     private function getArrayParameter(array $matches)
     {
-        if ($matches['function'] !== '') {
-            return $this->getContainerValue($matches);
-        }
+
 
         $parameters = new ParameterGroupParser($matches[0], $matches[2], ':');
+        $resolved = $parameters->parse();
 
-
-
-        return $parameters->parse();
-    }
-
-    /**
-     * @param array $matches
-     * @throws ParserException
-     * @return mixed
-     */
-    private function getContainerValue(array $matches)
-    {
-
-        $alias = $matches['function'];
-
-        if (null === Annotation::getContainer()) {
-            throw new ContainerNotFoundException(
-                'You did not provide any container'
-            );
+        if ($matches['function'] !== '') {
+            return $this->getContainerValue($matches['function'], $resolved->toArray());
         }
 
 
-        if (!Annotation::getContainer()->has($alias)) {
-            throw new ContainerNotFoundException(
-                sprintf(
-                    '%s alias could not found in container',
-                    $alias
-                )
-            );
-        }
-
-
-        return Annotation::getContainer()->get($alias);
+        return $resolved;
     }
+
 
     /**
      * @param mixed $value

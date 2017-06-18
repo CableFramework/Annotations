@@ -17,5 +17,8 @@
     "minimum-stability": "stable",
     "require": {
         "psr/container": "^1.0"
+    },
+    "require-dev": {
+        "cable/cable-container": "^1.2"
     }
 }
