@@ -3,6 +3,12 @@
 namespace Cable\Annotation\Parser;
 
 
+use Cable\Annotation\Annotation;
+
+/**
+ * Class AnnotationParser
+ * @package Cable\Annotation\Parser
+ */
 class AnnotationParser implements ParserInterface
 {
 
@@ -22,6 +28,10 @@ class AnnotationParser implements ParserInterface
     private $string;
 
     /**
+     * @var Annotation
+     */
+    private static $annotation;
+    /**
      * AnnotationParser constructor.
      * @param string $commandString
      * @param string $command
@@ -33,6 +43,23 @@ class AnnotationParser implements ParserInterface
             ->setCommand($command)
             ->setString($string);
     }
+
+    /**
+     * @return Annotation
+     */
+    public static function getAnnotation(): Annotation
+    {
+        return self::$annotation;
+    }
+
+    /**
+     * @param Annotation $annotation
+     */
+    public static function setAnnotation(Annotation $annotation)
+    {
+        self::$annotation = $annotation;
+    }
+
 
     /**
      * @return string

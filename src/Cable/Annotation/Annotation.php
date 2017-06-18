@@ -5,6 +5,7 @@ namespace Cable\Annotation;
 
 use Cable\Annotation\Mapping\CommandMapping;
 use Cable\Annotation\Mapping\MappedProperty;
+use Cable\Annotation\Parser\AnnotationParser;
 use Cable\Annotation\Parser\Exception\ParserException;
 use Cable\Annotation\Parser\ParserInterface;
 use Psr\Container\ContainerInterface;
@@ -12,10 +13,7 @@ use Psr\Container\ContainerInterface;
 class Annotation
 {
 
-    /**
-     * @var Annotation
-     */
-    private static $instance;
+
 
     /**
      * @var ContainerInterface
@@ -34,26 +32,9 @@ class Annotation
 
 
     /**
-     * @return Annotation
-     */
-    public static function getInstance(): Annotation
-    {
-
-        return self::$instance;
-    }
-
-    /**
-     * @param Annotation $instance
-     */
-    public static function setInstance(Annotation $instance)
-    {
-        self::$instance = $instance;
-    }
-
-    /**
      * @return ContainerInterface
      */
-    public static function getContainer()
+    public static function getContainer() : ContainerInterface
     {
         return self::$container;
     }
@@ -75,12 +56,13 @@ class Annotation
     {
         $this->parser = $parser;
 
-        self::$instance = $this;
+
+        AnnotationParser::setAnnotation($this);
     }
 
 
     /**
-     * @param mixed $command
+     * @param string|object $command
      *
      * @throws ParserException
      * @throws \ReflectionException
@@ -344,50 +326,6 @@ class Annotation
 
 
         return CommandBag::get($command);
-    }
-
-    /**
-     * @param $object
-     * @param string $name
-     * @param $parameter
-     */
-    private function setProperty($object, string $name, $parameter): void
-    {
-        if (method_exists(
-            $object,
-            $method = 'set' . mb_convert_case($name, MB_CASE_TITLE)
-        )) {
-            $object->$method($parameter);
-        } else {
-            $object->{$name} = $parameter;
-        }
-
-    }
-
-    /**
-     * @param CommandMapping $mappedObject
-     * @param int $key
-     * @throws RequiredArgumentException
-     * @return MappedProperty|bool
-     */
-    private function findPropertyFromMap(CommandMapping $mappedObject, $key)
-    {
-
-        foreach ($mappedObject->properties as $property) {
-            if ($property->name === $key) {
-                return $property;
-            }
-        }
-
-
-        throw new RequiredArgumentException(
-            sprintf(
-                '%s parameter not found',
-                $key
-            )
-        );
-
-
     }
 
     /**

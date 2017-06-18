@@ -2,8 +2,6 @@
 
 namespace Cable\Annotation\Parser;
 
-
-use Cable\Annotation\Annotation;
 use Cable\Annotation\CommandBag;
 use Cable\Annotation\CommandNotFoundException;
 use Cable\Annotation\Parser\Exception\ParserException;
@@ -127,7 +125,7 @@ class ParameterParser implements ParserInterface
      */
     private function getAnnotationParameter(string $value)
     {
-        $annotation = Annotation::getInstance();
+        $annotation = AnnotationParser::getAnnotation();
 
 
         return $annotation->directParse($value)
@@ -141,17 +139,7 @@ class ParameterParser implements ParserInterface
      */
     private function getArrayParameter(array $matches)
     {
-
-
-        $parameters = new ParameterGroupParser($matches[0], $matches[2], ':');
-        $resolved = $parameters->parse();
-
-        if ($matches['function'] !== '') {
-            return $this->getContainerValue($matches['function'], $resolved->toArray());
-        }
-
-
-        return $resolved;
+        return (new ArrayParameterParser($matches, ':'))->parse();
     }
 
 

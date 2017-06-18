@@ -2,7 +2,7 @@
 
 namespace Cable\Annotation;
 
-use Cable\Annotation\Parser\AnnotationParser;
+use Cable\Annotation\Parser\DirectParser;
 use Cable\Annotation\Parser\Exception\ParserException;
 
 /**
@@ -20,10 +20,34 @@ class Parser implements DocumentedParserInterface
     /**
      * @var array
      */
-    private $phpDoc = [
+    private static $phpDoc = [
         '@return',
         '@param',
         '@var',
+        '@author',
+        '@api',
+        '@category',
+        '@copyright',
+        '@example',
+        '@filesource',
+        '@ignore',
+        '@global',
+        '@internal',
+        '@license',
+        '@link',
+        '@method',
+        '@package',
+        '@property',
+        '@property-read',
+        '@property-write',
+        '@see',
+        '@since',
+        '@source',
+        '@subpackage',
+        '@throws',
+        '@todo',
+        '@uses',
+        '@version   '
     ];
 
 
@@ -72,35 +96,6 @@ class Parser implements DocumentedParserInterface
     }
 
 
-    /**
-     * find command and match string
-     *
-     * @param int $i
-     * @param array $matches
-     * @return array
-     */
-    private function findCommand(int $i, array $matches): array
-    {
-        $match = $matches[0][$i];
-        $cmd = $matches['function'][$i] ?? '';
-
-        return [$match, $cmd];
-    }
-
-    /**
-     * find string and return it
-     *
-     * @param int $i
-     * @param array $matches
-     * @return bool|string
-     */
-    private function findString(int $i, array $matches)
-    {
-        $string = $matches[0][$i] ?? '';
-
-
-        return substr($string, 1, -1);
-    }
 
     /**
      * @param string $str
@@ -108,32 +103,9 @@ class Parser implements DocumentedParserInterface
      */
     public function directParse(string $str): array
     {
-        // regex
-        $re = '/@(?\'function\'[\w]*)[\s\n\r]*|(?\'param\'\((?:[^\(\)]|(?R))*\))/i';
-
-        $commands = [];
-
-
-        if (preg_match_all($re, $str, $matches)) {
-            $count = count($matches[0]);
-
-            for ($i = 0; $i < $count; $i++) {
-                [$match, $cmd] = $this->findCommand($i, $matches);
-                ++$i;
-
-
-                $parser = new AnnotationParser(
-                    $match,
-                    $cmd,
-                    $this->findString($i, $matches)
-                );
-
-                $commands[$cmd][] = $parser->parse()->toArray();
-            }
-        }
-
-
-        return $commands;
+        return (new DirectParser())
+            ->setDocument($str)
+            ->parse();
     }
 
     /**
@@ -217,7 +189,7 @@ class Parser implements DocumentedParserInterface
      */
     public function skipPhpDoc(): Parser
     {
-        $this->skip = array_merge($this->skip, $this->phpDoc);
+        $this->skip = array_merge($this->skip, static::$phpDoc);
         return $this;
     }
 
