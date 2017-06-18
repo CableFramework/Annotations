@@ -73,7 +73,7 @@ class Test{
 
 }
 
-
+// execute the class instance
 $class = $annotation->executeClass(new Test());
 
 $methods = $annotation->methods();
@@ -87,4 +87,45 @@ foreach($methods->Test() as $test){
 
 ```
 
+## Using Paramaters
 
+### Giving Arrays
+
+```php
+
+    /**
+     *
+     * @Test(datas={test: "test"})
+     *
+     * will be given as ["test" = "test"]
+     *
+     */
+```
+
+
+### giving annotation into data
+
+```php
+
+      /**
+       *
+       * @Test(data= @Test(name = "data"))
+       *
+       *
+       * // you can give @Test  into data
+       */
+```
+
+### giving objects into data
+
+```php
+
+     /**
+       *
+       * @Test(data= aliasname{test:"test"})
+       *
+       *
+       * // you must save aliasname into the container
+       */
+
+```
