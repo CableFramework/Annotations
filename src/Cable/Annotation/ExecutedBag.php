@@ -1,14 +1,11 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: vahit
- * Date: 18.06.2017
- * Time: 13:09
- */
 
 namespace Cable\Annotation;
 
-
+/**
+ * Class ExecutedBag
+ * @package Cable\Annotation
+ */
 class ExecutedBag
 {
     /**

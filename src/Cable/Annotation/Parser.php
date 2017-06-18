@@ -5,7 +5,6 @@ namespace Cable\Annotation;
 use Cable\Annotation\Parser\AnnotationParser;
 use Cable\Annotation\Parser\CommandParser;
 use Cable\Annotation\Parser\Exception\ParserException;
-use Cable\Annotation\Parser\LineParser;
 use Cable\Annotation\Parser\ParserInterface;
 
 /**
@@ -175,7 +174,7 @@ class Parser implements ParserInterface
      * @param string $command
      * @return string
      */
-    private function cleanWildcard(string $command) : string
+    private function cleanWildcard(string $command): string
     {
         return str_replace('*', '', $command);
     }
@@ -229,6 +228,10 @@ class Parser implements ParserInterface
      */
     public function checkCommentIsValid(): void
     {
+        if ($this->document === '') {
+            return;
+        }
+
         if (0 !== strpos($this->document, '/**')) {
             throw new ParserException(
                 sprintf(

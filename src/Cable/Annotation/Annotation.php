@@ -187,6 +187,9 @@ class Annotation
                 }
             }
         }
+
+
+        return $bag;
     }
 
     /**
@@ -211,6 +214,8 @@ class Annotation
             }
         }
 
+
+        return $bag;
     }
 
     /**
