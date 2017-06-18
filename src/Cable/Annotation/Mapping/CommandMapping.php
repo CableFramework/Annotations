@@ -42,7 +42,7 @@ class CommandMapping implements MappingInterface
     public $propertySetter;
 
     /**
-     * @var array
+     * @var string
      */
     public $classSetter;
 
@@ -96,7 +96,7 @@ class CommandMapping implements MappingInterface
         $parsed = $this->parser->parse();
 
         $this->name  = $this->getName($parsed, $class);
-        $this->classSetter[$this->name] = $this->getSetter($parsed, $object);
+        $this->classSetter = $this->getSetter($parsed, $object);
 
 
         $this->prepareProperties($class->getProperties());
@@ -153,7 +153,7 @@ class CommandMapping implements MappingInterface
         }
 
         // if there is no class setter we will use property setters
-        if(!isset($this->classSetter[$this->name])){
+        if(null === $this->classSetter){
             if (!isset($parsed['Setter'])) {
                 $parsed['Setter'][0][0] = 'set' . mb_convert_case($name, MB_CASE_TITLE);
             }

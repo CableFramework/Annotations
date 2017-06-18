@@ -4,7 +4,6 @@
 namespace Cable\Annotation;
 
 use Cable\Annotation\Mapping\CommandMapping;
-use Cable\Annotation\Mapping\ExecutedBag;
 use Cable\Annotation\Mapping\MappedProperty;
 use Cable\Annotation\Parser\Exception\ParserException;
 use Psr\Container\ContainerInterface;
@@ -53,7 +52,7 @@ class Annotation
     /**
      * @return ContainerInterface
      */
-    public static function getContainer(): ContainerInterface
+    public static function getContainer()
     {
         return self::$container;
     }
@@ -61,7 +60,7 @@ class Annotation
     /**
      * @param ContainerInterface $container
      */
-    public static function setContainer(ContainerInterface $container) : void
+    public static function setContainer(ContainerInterface $container): void
     {
         self::$container = $container;
     }
@@ -92,16 +91,11 @@ class Annotation
         if (is_string($command)) {
             $command = new $command;
         }
+        $map = (new CommandMapping($this->parser))->map($command);
 
-
-        $mapper = new CommandMapping($this->parser);
-
-        $mapper->map($command);
-
-
-        CommandBag::add($mapper->name, [
+        CommandBag::add($map->name, [
             'object' => $command,
-            'map' => $mapper
+            'map' => $map
         ]);
 
         return $this;
@@ -111,33 +105,37 @@ class Annotation
     /**
      * @param \ReflectionMethod $method
      *
+     * @throws CommandNotFoundException
+     * @throws RequiredArgumentException
      * @throws \ReflectionException
      * @throws ParserException
      * @return array
      */
     public function executeMethod(\ReflectionMethod $method): array
     {
-        $executed = $this->parse($method->getDocComment())
+        return $this->parse($method->getDocComment())
             ->execute();
-
-        return $executed;
     }
 
     /**
      * @param \ReflectionProperty $property
+     * @throws CommandNotFoundException
+     * @throws RequiredArgumentException
+     * @throws \ReflectionException
+     * @throws ParserException
      * @return array
      */
     public function executeProperty(\ReflectionProperty $property): array
     {
-        $executed = $this->parse($property->getDocComment())
+        return $this->parse($property->getDocComment())
             ->execute();
-
-        return $executed;
     }
 
     /**
      * @param $class
      *
+     * @throws CommandNotFoundException
+     * @throws RequiredArgumentException
      * @throws \ReflectionException
      * @throws ParserException
      * @return ExecutedBag
@@ -145,17 +143,19 @@ class Annotation
     public function executeClass($class): ExecutedBag
     {
         $classReflection = new \ReflectionClass($class);
-
-
         $bag = new ExecutedBag();
-
 
         $classExecuted = $this->parse($classReflection->getDocComment())
             ->execute();
 
+        $bag->set(
+            'properties',
+            $this->executeProperties($classReflection->getProperties())
+        );
 
-        $this->executeProperties($classReflection->getProperties(), $bag);
-        $this->executeMethods($classReflection->getMethods(), $bag);
+        $bag->set('methods',
+            $this->executeMethods($classReflection->getMethods())
+        );
 
         foreach ($classExecuted as $item => $value) {
             $bag->set($item, $value);
@@ -166,12 +166,17 @@ class Annotation
 
     /**
      * @param \ReflectionMethod[] $methods
-     * @param ExecutedBag $bag
      * @throws ParserException
+     * @throws CommandNotFoundException
+     * @throws RequiredArgumentException
      * @throws \ReflectionException
+     * @return ExecutedBag
      */
-    private function executeMethods(array $methods, ExecutedBag $bag): void
+    private function executeMethods(array $methods): ExecutedBag
     {
+        $bag = new ExecutedBag();
+
+
         if (!empty($methods)) {
             foreach ($methods as $method) {
                 $executed = $this->executeMethod($method);
@@ -186,10 +191,15 @@ class Annotation
 
     /**
      * @param \ReflectionProperty[] $properties
-     * @param ExecutedBag $bag
+     * @throws ParserException
+     * @throws CommandNotFoundException
+     * @throws RequiredArgumentException
+     * @throws \ReflectionException
+     * @return ExecutedBag
      */
-    private function executeProperties(array $properties, ExecutedBag $bag): void
+    private function executeProperties(array $properties): ExecutedBag
     {
+        $bag = new ExecutedBag();
 
         if (!empty($properties)) {
             foreach ($properties as $property) {
@@ -254,22 +264,42 @@ class Annotation
                 $object = clone $com['object'];
                 $map = $com['map'];
 
+
+                $selectedCommand = $this->setDefaultParameters($selectedCommand, $map);
+
                 $this->checkRequiredParams($map->required, $selectedCommand);
 
-                foreach ($selectedCommand as $key => $parameter) {
-                    $property = $this->findPropertyFromMap($map, $key);
 
-                    $this->setProperty($object, $property->name, $parameter);
-                }
-
-                $prepared[$commandName][] = $object;
+                $prepared[$commandName][] = $this->fill($object, $map, $selectedCommand);
             }
         }
 
         return $prepared;
     }
 
+    /**
+     * @param array $selectedCommand
+     * @param CommandMapping $mapping
+     * @return array
+     */
+    private function setDefaultParameters(
+        array $selectedCommand,
+        CommandMapping $mapping
+    ): array
+    {
+        return array_merge($mapping->default, $selectedCommand);
+    }
 
+    /**
+     * @param object $object
+     * @param CommandMapping $map
+     * @param array $selectedCommand
+     * @return object
+     */
+    private function fill($object, CommandMapping $map, array $selectedCommand)
+    {
+        return (new Filler($map, $object, $selectedCommand))->fill();
+    }
 
     /**
      * @param string $command

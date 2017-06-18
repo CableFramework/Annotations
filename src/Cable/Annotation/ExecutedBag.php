@@ -1,14 +1,16 @@
 <?php
-
-namespace Cable\Annotation\Mapping;
-
 /**
- * Class ExecutedBag
- * @package Cable\Annotation\Mapping
+ * Created by PhpStorm.
+ * User: vahit
+ * Date: 18.06.2017
+ * Time: 13:09
  */
+
+namespace Cable\Annotation;
+
+
 class ExecutedBag
 {
-
     /**
      * @var array
      */
@@ -19,7 +21,7 @@ class ExecutedBag
      *
      * @param  string $key
      * @param mixed $default
-     * @return array
+     * @return mixed
      *
      */
     public  function get($key, $default = null)
@@ -62,4 +64,14 @@ class ExecutedBag
         return $array;
     }
 
+
+    /**
+     * @param string $name
+     * @param array $arguments
+     * @return mixed
+     */
+    public function __call(string $name,array $arguments = [])
+    {
+        return $this->get($name, $arguments[0] ?? null);
+    }
 }
