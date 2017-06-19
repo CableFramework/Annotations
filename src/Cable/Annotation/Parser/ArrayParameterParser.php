@@ -92,7 +92,12 @@ class ArrayParameterParser implements ParserInterface
      * @throws PropertyNotFoundException
      * @throws \ReflectionException
      */
-    private function fill($resolved, array $attributes){
+    private function fill($resolved, array $attributes = []){
+
+        if (empty($attributes)) {
+            return $resolved;
+        }
+
         $class = new \ReflectionClass($resolved);
 
         foreach ($attributes as $name => $attribute) {
