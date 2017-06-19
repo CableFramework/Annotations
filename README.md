@@ -9,7 +9,7 @@ PHP 7.1+
 
 ```sh 
 
-composer require cable/cable-annotation
+composer require cable/cable-annotations
 
 ```
 
