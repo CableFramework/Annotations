@@ -47,7 +47,6 @@ class ArrayParameterParser implements ParserInterface
             return $this->getContainerValue($matches['function'], $resolved->toArray());
         }
 
-
         return $resolved;
     }
 
