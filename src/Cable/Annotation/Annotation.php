@@ -14,7 +14,6 @@ class Annotation
 {
 
 
-
     /**
      * @var ContainerInterface
      */
@@ -34,7 +33,7 @@ class Annotation
     /**
      * @return ContainerInterface
      */
-    public static function getContainer() : ContainerInterface
+    public static function getContainer(): ContainerInterface
     {
         return self::$container;
     }
@@ -146,7 +145,6 @@ class Annotation
         );
 
 
-
         foreach ($classExecuted as $item => $value) {
             $bag->set($item, $value);
         }
@@ -169,18 +167,21 @@ class Annotation
 
         if (!empty($methods)) {
 
+            $setting = [];
             foreach ($methods as $method) {
-
-
                 $executed = $this->executeMethod($method);
 
-                foreach ($executed as $item => $values) {
 
-                    $bag->set($item, array(
-                        'from' => $method->getDeclaringClass()->getName().'::'.$method->getName(),
+                foreach ($executed as $item => $values) {
+                    $setting[$item][] = array(
+                        'from' => $method->getDeclaringClass()->getName() . '::' . $method->getName(),
                         'value' => $values
-                    ));
+                    );
                 }
+            }
+
+            foreach ($setting as $set => $value) {
+                $bag->set($set, $value);
             }
         }
 
@@ -202,17 +203,24 @@ class Annotation
         $bag = new ExecutedBag();
 
         if (!empty($properties)) {
+
+            $setting = [];
             foreach ($properties as $property) {
                 $executed = $this->executeProperty($property);
 
                 foreach ($executed as $item => $values) {
-                    $bag->set($item, array(
+                    $setting[$item][] = array(
                         'from' =>
                             $property->getDeclaringClass()
-                                ->getName().'->'.$property->getName(),
+                                ->getName() . '->' . $property->getName(),
                         'value' => $values
-                    ));
+                    );
                 }
+            }
+
+
+            foreach ($setting as $set => $value) {
+                $bag->set($set, $value);
             }
         }
 

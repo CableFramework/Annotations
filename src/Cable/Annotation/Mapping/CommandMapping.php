@@ -3,6 +3,8 @@
 namespace Cable\Annotation\Mapping;
 
 
+use Cable\Annotation\DocumentedParserInterface;
+use Cable\Annotation\Mapping\Command\Name;
 use Cable\Annotation\Parser\Exception\ParserException;
 use Cable\Annotation\Parser\ParserInterface;
 use Cable\Annotation\SetterInterface;
@@ -16,7 +18,7 @@ class CommandMapping implements MappingInterface
 
 
     /**
-     * @var Parser
+     * @var DocumentedParserInterface
      */
     private $parser;
 
@@ -52,6 +54,14 @@ class CommandMapping implements MappingInterface
      */
     public $properties = [];
 
+
+    /**
+     * @var array
+     */
+    private static $mappers = [
+        Name::class,
+    ];
+
     /**
      * Mapping constructor.
      * @param ParserInterface $parser
@@ -66,7 +76,7 @@ class CommandMapping implements MappingInterface
      * @param \ReflectionClass $class
      * @return string
      */
-    private function getName(array $parsed, \ReflectionClass $class)
+    private function getName(array $parsed, \ReflectionClass $class) : string
     {
         if (isset($parsed['Namespace'][0][0])) {
             $namespace = $parsed['Namespace'][0][0];

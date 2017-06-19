@@ -21,7 +21,7 @@ class ExecutedBag
      * @return mixed
      *
      */
-    public  function get($key, $default = null)
+    public function get($key, $default = null)
     {
         $array = &$this->objects;
 
@@ -29,7 +29,7 @@ class ExecutedBag
             return $array[$key];
         }
         foreach (explode('\\', $key) as $segment) {
-            if ( ! is_array($array) || ! array_key_exists($segment, $array)) {
+            if (!is_array($array) || !array_key_exists($segment, $array)) {
                 return $default;
             }
             $array = $array[$segment];
@@ -42,7 +42,7 @@ class ExecutedBag
      * @param $value
      * @return array|mixed
      */
-    public  function set($key, $value)
+    public function set($key, $value)
     {
         $array = &$this->objects;
 
@@ -52,12 +52,14 @@ class ExecutedBag
             // If the key doesn't exist at this depth, we will just create an empty array
             // to hold the next value, allowing us to create the arrays to hold final
             // values at the correct depth. Then we'll keep digging into the array.
-            if ( ! isset($array[$key]) || ! is_array($array[$key])) {
+            if (!isset($array[$key]) || !is_array($array[$key])) {
                 $array[$key] = [];
             }
             $array = &$array[$key];
         }
+
         $array[array_shift($keys)] = $value;
+
         return $array;
     }
 
@@ -67,7 +69,7 @@ class ExecutedBag
      * @param array $arguments
      * @return mixed
      */
-    public function __call(string $name,array $arguments = [])
+    public function __call(string $name, array $arguments = [])
     {
         return $this->get($name, $arguments[0] ?? null);
     }
