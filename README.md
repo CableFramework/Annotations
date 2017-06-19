@@ -1,6 +1,10 @@
 # Annonations
 PHP Annonations library for cable framework
 
+## Requirements
+
+PHP 7.1+
+
 ## Installation
 
 ```sh 
