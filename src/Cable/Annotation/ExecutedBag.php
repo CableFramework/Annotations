@@ -11,7 +11,7 @@ class ExecutedBag
     /**
      * @var array
      */
-    public $objects;
+    private $objects;
 
     /**
      * Fetch a flattened array of a nested array element.
@@ -23,7 +23,7 @@ class ExecutedBag
      */
     public function get($key, $default = null)
     {
-        $array = &$this->objects;
+        $array = $this->objects;
 
         if (isset($array[$key])) {
             return $array[$key];
