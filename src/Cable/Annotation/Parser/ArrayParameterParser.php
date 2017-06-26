@@ -75,7 +75,6 @@ class ArrayParameterParser implements ParserInterface
             );
         }
 
-
         if (Annotation::getContainer() instanceof Container) {
             return Annotation::getContainer()->fill($alias, $attributes);
         }
