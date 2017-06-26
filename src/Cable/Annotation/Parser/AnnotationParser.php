@@ -37,7 +37,7 @@ class AnnotationParser implements ParserInterface
      * @param string $command
      * @param string $string
      */
-    public function __construct(string $commandString,string $command,string $string)
+    public function __construct($commandString,$command,$string)
     {
         $this->setCommandString($commandString)
             ->setCommand($command)
@@ -47,7 +47,7 @@ class AnnotationParser implements ParserInterface
     /**
      * @return Annotation
      */
-    public static function getAnnotation(): Annotation
+    public static function getAnnotation()
     {
         return self::$annotation;
     }
@@ -64,7 +64,7 @@ class AnnotationParser implements ParserInterface
     /**
      * @return string
      */
-    public function getCommandString(): string
+    public function getCommandString()
     {
         return $this->commandString;
     }
@@ -73,7 +73,7 @@ class AnnotationParser implements ParserInterface
      * @param string $commandString
      * @return AnnotationParser
      */
-    public function setCommandString(string $commandString): AnnotationParser
+    public function setCommandString($commandString)
     {
         $this->commandString = $commandString;
         return $this;
@@ -82,7 +82,7 @@ class AnnotationParser implements ParserInterface
     /**
      * @return string
      */
-    public function getCommand(): string
+    public function getCommand()
     {
         return $this->command;
     }
@@ -91,7 +91,7 @@ class AnnotationParser implements ParserInterface
      * @param string $command
      * @return AnnotationParser
      */
-    public function setCommand(string $command): AnnotationParser
+    public function setCommand($command)
     {
         $this->command = $command;
         return $this;
@@ -100,7 +100,7 @@ class AnnotationParser implements ParserInterface
     /**
      * @return string
      */
-    public function getString(): string
+    public function getString()
     {
         return $this->string;
     }
@@ -109,7 +109,7 @@ class AnnotationParser implements ParserInterface
      * @param string $string
      * @return AnnotationParser
      */
-    public function setString(string $string): AnnotationParser
+    public function setString($string)
     {
         $this->string = $string;
         return $this;

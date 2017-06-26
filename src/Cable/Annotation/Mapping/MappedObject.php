@@ -30,7 +30,7 @@ class MappedObject extends Mapped
      * @param array $methods
      */
     public function __construct(
-        string  $name,
+        $name,
         array $properties = [],
         array $methods = []
     )
@@ -44,7 +44,7 @@ class MappedObject extends Mapped
      * @param string|int $name
      * @return MappedProperty
      */
-    public function getProperty($name) : MappedProperty {
+    public function getProperty($name) {
         return $this->properties[$name];
     }
 
@@ -52,7 +52,7 @@ class MappedObject extends Mapped
      * @param $name
      * @return MappedMethod
      */
-    public function getMethod($name) : MappedMethod{
+    public function getMethod($name){
         return $this->methods[$name];
     }
 }

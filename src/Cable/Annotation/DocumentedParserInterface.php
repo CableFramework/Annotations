@@ -12,6 +12,6 @@ interface DocumentedParserInterface extends ParserInterface
      * @param string $document
      * @return mixed
      */
-    public function setDocument(string $document);
+    public function setDocument($document);
 
 }

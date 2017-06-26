@@ -1,11 +1,4 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: vahit
- * Date: 14.06.2017
- * Time: 15:04
- */
-
 namespace Cable\Annotation\Parser;
 
 
@@ -31,7 +24,7 @@ class ParameterBag
      * @param Parameter $parameter
      * @return ParameterBag
      */
-    public function add(Parameter $parameter) : ParameterBag{
+    public function add(Parameter $parameter){
         $this->parameters[] = $parameter;
 
         return $this;

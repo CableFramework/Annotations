@@ -16,7 +16,7 @@ class CommandBag
      * @param string $name
      * @param array $command
      */
-    public static function add(string $name,array $command) : void
+    public static function add($name,array $command)
     {
         static::$commands[$name] = $command;
     }
@@ -25,7 +25,7 @@ class CommandBag
      * @param string $name
      * @return bool
      */
-    public static function has(string $name) : bool
+    public static function has($name)
     {
         return isset(static::$commands[$name]);
     }
@@ -34,7 +34,7 @@ class CommandBag
      * @param string $name
      * @return array
      */
-    public static function get(string $name) : array
+    public static function get($name)
     {
         return static::$commands[$name];
     }
@@ -44,14 +44,14 @@ class CommandBag
      * @param string $name
      * @return mixed
      */
-    public static function getMap(string $name){
+    public static function getMap($name){
         return static::$commands[$name]['map'];
     }
 
     /**
      * @return array
      */
-    public static function getCommands(): array
+    public static function getCommands()
     {
         return self::$commands;
     }
@@ -59,7 +59,7 @@ class CommandBag
     /**
      * @param array $commands
      */
-    public static function setCommands(array $commands) : void
+    public static function setCommands(array $commands)
     {
         self::$commands = $commands;
     }

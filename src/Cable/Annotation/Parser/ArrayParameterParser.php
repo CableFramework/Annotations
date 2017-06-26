@@ -27,7 +27,7 @@ class ArrayParameterParser implements ParserInterface
      * @param array $matches
      * @param string $parser
      */
-    public function __construct(array $matches, string $parser = ':')
+    public function __construct(array $matches,$parser = ':')
     {
         $this->matches = $matches;
         $this->parser = $parser;
@@ -56,7 +56,7 @@ class ArrayParameterParser implements ParserInterface
      * @throws ParserException
      * @return mixed
      */
-    private function getContainerValue(string $alias, array $attributes = [])
+    private function getContainerValue($alias, array $attributes = [])
     {
 
         if (null === Annotation::getContainer()) {

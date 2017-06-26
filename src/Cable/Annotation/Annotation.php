@@ -33,7 +33,7 @@ class Annotation
     /**
      * @return ContainerInterface
      */
-    public static function getContainer(): ContainerInterface
+    public static function getContainer()
     {
         return self::$container;
     }
@@ -41,7 +41,7 @@ class Annotation
     /**
      * @param ContainerInterface $container
      */
-    public static function setContainer(ContainerInterface $container): void
+    public static function setContainer(ContainerInterface $container)
     {
         self::$container = $container;
     }
@@ -93,7 +93,7 @@ class Annotation
      * @throws ParserException
      * @return array
      */
-    public function executeMethod(\ReflectionMethod $method): array
+    public function executeMethod(\ReflectionMethod $method)
     {
 
         return $this->parse($method->getDocComment())
@@ -108,7 +108,7 @@ class Annotation
      * @throws ParserException
      * @return array
      */
-    public function executeProperty(\ReflectionProperty $property): array
+    public function executeProperty(\ReflectionProperty $property)
     {
         return $this->parse($property->getDocComment())
             ->execute();
@@ -123,7 +123,7 @@ class Annotation
      * @throws ParserException
      * @return ExecutedBag
      */
-    public function executeClass($class): ExecutedBag
+    public function executeClass($class)
     {
         $classReflection = new \ReflectionClass($class);
         $bag = new ExecutedBag();
@@ -160,7 +160,7 @@ class Annotation
      * @throws \ReflectionException
      * @return ExecutedBag
      */
-    private function executeMethods(array $methods): ExecutedBag
+    private function executeMethods(array $methods)
     {
         $bag = new ExecutedBag();
 
@@ -198,7 +198,7 @@ class Annotation
      * @throws \ReflectionException
      * @return ExecutedBag
      */
-    private function executeProperties(array $properties): ExecutedBag
+    private function executeProperties(array $properties)
     {
         $bag = new ExecutedBag();
 
@@ -234,7 +234,7 @@ class Annotation
      * @throws ParserException
      * @return Annotation
      */
-    public function parse(string $comment): Annotation
+    public function parse($comment)
     {
         $this->parser->setDocument($comment);
 
@@ -248,7 +248,7 @@ class Annotation
      * @param string $str
      * @return $this
      */
-    public function directParse(string $str)
+    public function directParse($str)
     {
         $this->parsed = $this->parser->directParse($str);
 
@@ -262,7 +262,7 @@ class Annotation
      * @throws CommandNotFoundException
      * @return array
      */
-    public function execute(): array
+    public function execute()
     {
         $prepared = [];
 
@@ -300,7 +300,7 @@ class Annotation
     private function setDefaultParameters(
         array $selectedCommand,
         CommandMapping $mapping
-    ): array
+    )
     {
         return array_merge($mapping->default, $selectedCommand);
     }
@@ -321,7 +321,7 @@ class Annotation
      * @throws CommandNotFoundException
      * @return array
      */
-    private function findCommand(string $command): array
+    private function findCommand($command)
     {
         if (!CommandBag::has($command)) {
             throw new CommandNotFoundException(
@@ -341,7 +341,7 @@ class Annotation
      * @param array $commands
      * @throws RequiredArgumentException
      */
-    private function checkRequiredParams(array $required, array $commands): void
+    private function checkRequiredParams(array $required, array $commands)
     {
 
         foreach ($required as $item) {

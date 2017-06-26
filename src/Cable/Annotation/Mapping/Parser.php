@@ -19,7 +19,7 @@ abstract class Parser
     /**
      * @return mixed
      */
-    public function getParser() : Base
+    public function getParser()
     {
         return $this->parser;
     }
@@ -28,7 +28,7 @@ abstract class Parser
      * @param mixed $parser
      * @return Parser
      */
-    public function setParser(Base $parser) : Parser
+    public function setParser(Base $parser)
     {
         $this->parser = $parser;
         return $this;

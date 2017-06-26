@@ -60,7 +60,7 @@ class Parser implements DocumentedParserInterface
      * Parser constructor.
      * @param string $document
      */
-    public function __construct(string $document = '')
+    public function __construct($document = '')
     {
         $this->document = $document;
     }
@@ -68,7 +68,7 @@ class Parser implements DocumentedParserInterface
     /**
      * @return string
      */
-    public function getDocument(): string
+    public function getDocument()
     {
         return $this->document;
     }
@@ -77,7 +77,7 @@ class Parser implements DocumentedParserInterface
      * @param string $document
      * @return Parser
      */
-    public function setDocument(string $document): Parser
+    public function setDocument($document)
     {
         $this->document = $document;
         return $this;
@@ -90,7 +90,7 @@ class Parser implements DocumentedParserInterface
      * @param string $document
      * @return string
      */
-    private function cleanStarting(string $document): string
+    private function cleanStarting($document)
     {
         return str_replace(array('/**', '*/'), '', $document);
     }
@@ -101,7 +101,7 @@ class Parser implements DocumentedParserInterface
      * @param string $str
      * @return array
      */
-    public function directParse(string $str): array
+    public function directParse($str)
     {
         return (new DirectParser())
             ->setDocument($str)
@@ -145,7 +145,7 @@ class Parser implements DocumentedParserInterface
      * @param string $command
      * @return string
      */
-    private function cleanWildcard(string $command): string
+    private function cleanWildcard($command)
     {
         return str_replace('*', '', $command);
     }
@@ -155,9 +155,9 @@ class Parser implements DocumentedParserInterface
      * @param array $lines
      * @return array
      */
-    private function filterSkip(array $lines): array
+    private function filterSkip(array $lines)
     {
-        return array_filter($lines, function (string $line) {
+        return array_filter($lines, function ($line) {
             foreach ($this->skip as $item) {
                 if (strpos($line, $item) !== false) {
                     return false;
@@ -174,9 +174,9 @@ class Parser implements DocumentedParserInterface
      * @param array $lines
      * @return array
      */
-    public function filterEmptyLines(array $lines): array
+    public function filterEmptyLines(array $lines)
     {
-        return array_filter($lines, function (string $line) {
+        return array_filter($lines, function ($line) {
             $line = trim($line);
 
             return $line !== '*' ? $line : false;
@@ -187,7 +187,7 @@ class Parser implements DocumentedParserInterface
     /**
      * @return Parser
      */
-    public function skipPhpDoc(): Parser
+    public function skipPhpDoc()
     {
         $this->skip = array_merge($this->skip, static::$phpDoc);
         return $this;
@@ -197,7 +197,7 @@ class Parser implements DocumentedParserInterface
     /**
      * @throws ParserException
      */
-    public function checkCommentIsValid(): void
+    public function checkCommentIsValid()
     {
         if ($this->document === '') {
             return;

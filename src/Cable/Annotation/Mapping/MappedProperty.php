@@ -16,7 +16,7 @@ class MappedProperty extends Mapped
      * @param string $name
      * @param array $mapped
      */
-    public function __construct(string $name,array $mapped = [])
+    public function __construct($name,array $mapped = [])
     {
         $this->name = $name;
         $this->mapped = $mapped;

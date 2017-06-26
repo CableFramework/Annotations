@@ -30,7 +30,7 @@ class ParameterGroupParser implements ParserInterface
      * @param string $parameters
      * @param string $parser
      */
-    public function __construct(string $command, string  $parameters,string  $parser = '=')
+    public function __construct($command,$parameters,$parser = '=')
     {
         $this->command = $command;
         $this->parameters = $parameters;

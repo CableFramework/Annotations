@@ -30,7 +30,7 @@ class Parameter
     /**
      * @return array
      */
-    public function toArray() : array{
+    public function toArray(){
         $value = $this->value instanceof ParameterBag ?
             $this->value->toArray() :
             $this->value;

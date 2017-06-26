@@ -69,8 +69,8 @@ class ExecutedBag
      * @param array $arguments
      * @return mixed
      */
-    public function __call(string $name, array $arguments = [])
+    public function __call($name, array $arguments = [])
     {
-        return $this->get($name, $arguments[0] ?? null);
+        return $this->get($name, isset($arguments[0]) ? $arguments[0] :  null);
     }
 }

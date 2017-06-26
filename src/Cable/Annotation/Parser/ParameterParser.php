@@ -37,7 +37,7 @@ class ParameterParser implements ParserInterface
      * @param string $parameter
      * @param string $explode
      */
-    public function __construct(int $key, string $parameter, string $explode = '=')
+    public function __construct($key,$parameter, $explode = '=')
     {
         $this->key = $key;
         $this->parameter = $parameter;
@@ -47,7 +47,7 @@ class ParameterParser implements ParserInterface
     /**
      * @return string
      */
-    public function getCommand(): string
+    public function getCommand()
     {
         return $this->command;
     }
@@ -56,7 +56,7 @@ class ParameterParser implements ParserInterface
      * @param string $command
      * @return ParameterParser
      */
-    public function setCommand(string $command): ParameterParser
+    public function setCommand($command)
     {
         $this->command = $command;
         return $this;
@@ -66,13 +66,13 @@ class ParameterParser implements ParserInterface
     /**
      * @return array
      */
-    private function getNameAndValue(): array
+    private function getNameAndValue()
     {
         $name = 0;
 
 
         if (false !== strpos($this->parameter, $this->explode)) {
-            [$name, $value] = explode($this->explode, $this->parameter, 2);
+            list($name, $value) = explode($this->explode, $this->parameter, 2);
         } else {
 
 
@@ -99,9 +99,9 @@ class ParameterParser implements ParserInterface
      * @throws ParserException
      * @return Parameter
      */
-    public function parse(): Parameter
+    public function parse()
     {
-        [$name, $value] = $this->getNameAndValue();
+        list($name, $value) = $this->getNameAndValue();
 
 
         if (preg_match("/(?'function'[\w]*){((?:[^{}]+|(?R))*)}/", $value, $matches)) {
@@ -123,7 +123,7 @@ class ParameterParser implements ParserInterface
      * @throws CommandNotFoundException
      * @return mixed
      */
-    private function getAnnotationParameter(string $value)
+    private function getAnnotationParameter($value)
     {
         $annotation = AnnotationParser::getAnnotation();
 
@@ -156,7 +156,9 @@ class ParameterParser implements ParserInterface
         $value = trim($value);
 
         if (0 === strpos($value, '"') || 0 === strpos($value, "'")) {
-            return substr($value, 1, -1) ?? '';
+            $str =  substr($value, 1, -1);
+
+            return $str !== null ? $str : '';
         }
 
         return $value;

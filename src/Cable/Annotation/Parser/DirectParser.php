@@ -22,7 +22,7 @@ class DirectParser implements DocumentedParserInterface
      * @param string $document
      * @return DirectParser
      */
-    public function setDocument(string $document) : DirectParser
+    public function setDocument($document)
     {
         $this->document = $document;
 
@@ -32,7 +32,7 @@ class DirectParser implements DocumentedParserInterface
     /**
      * @return array
      */
-    public function parse() : array
+    public function parse()
     {
         $commands = [];
 
@@ -41,7 +41,7 @@ class DirectParser implements DocumentedParserInterface
             $count = count($matches[0]);
 
             for ($i = 0; $i < $count; $i++) {
-                [$match, $cmd] = $this->findCommand($i, $matches);
+                list($match, $cmd) = $this->findCommand($i, $matches);
                 ++$i;
 
 
@@ -66,10 +66,10 @@ class DirectParser implements DocumentedParserInterface
      * @param array $matches
      * @return array
      */
-    private function findCommand(int $i, array $matches): array
+    private function findCommand($i, array $matches)
     {
         $match = $matches[0][$i];
-        $cmd = $matches['function'][$i] ?? '';
+        $cmd = isset($matches['function'][$i]) ? $matches['function'][$i] : '';
 
         return [$match, $cmd];
     }
@@ -81,9 +81,9 @@ class DirectParser implements DocumentedParserInterface
      * @param array $matches
      * @return bool|string
      */
-    private function findString(int $i, array $matches)
+    private function findString($i, array $matches)
     {
-        $string = $matches[0][$i] ?? '';
+        $string = isset($matches[0][$i]) ? $matches[0][$i] : '';
 
 
         return substr($string, 1, -1);

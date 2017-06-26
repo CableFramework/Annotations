@@ -55,12 +55,7 @@ class CommandMapping implements MappingInterface
     public $properties = [];
 
 
-    /**
-     * @var array
-     */
-    private static $mappers = [
-        Name::class,
-    ];
+
 
     /**
      * Mapping constructor.
@@ -76,7 +71,7 @@ class CommandMapping implements MappingInterface
      * @param \ReflectionClass $class
      * @return string
      */
-    private function getName(array $parsed, \ReflectionClass $class) : string
+    private function getName(array $parsed, \ReflectionClass $class)
     {
         if (isset($parsed['Namespace'][0][0])) {
             $namespace = $parsed['Namespace'][0][0];
@@ -89,7 +84,7 @@ class CommandMapping implements MappingInterface
         }
 
 
-        $name = $parsed['Name'][0][0] ?? $class->getName();
+        $name = isset($parsed['Name'][0][0]) ? $parsed['Name'][0][0] :  $class->getName();
 
         return $namespace . $name;
     }
@@ -100,7 +95,7 @@ class CommandMapping implements MappingInterface
      * @throws \ReflectionException
      * @return mixed
      */
-    public function map($object): CommandMapping
+    public function map($object)
     {
         $class = new \ReflectionClass($object);
         $this->parser->setDocument($class->getDocComment());
@@ -123,7 +118,7 @@ class CommandMapping implements MappingInterface
      * @param array $properties
      * @throws ParserException
      */
-    private function prepareProperties(array $properties) : void
+    private function prepareProperties(array $properties)
     {
         foreach ($properties as $property) {
             /**
@@ -151,7 +146,7 @@ class CommandMapping implements MappingInterface
      * @param string $name
      * @param array $parsed
      */
-    private function prepareRequiredDefaultSetter(string $name, array $parsed) : void
+    private function prepareRequiredDefaultSetter($name, array $parsed)
     {
         // if properity is required
         if (isset($parsed['Required'])) {

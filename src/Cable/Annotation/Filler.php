@@ -59,6 +59,9 @@ class Filler implements FillerInterface
             $name = $property->name;
             $setter = $this->mapping->propertySetter[$name];
 
+            if (!isset($this->command[$name])) {
+                continue;
+            }
 
             if (method_exists($this->object, $setter)) {
                 $this->object->{$setter}($this->command[$name]);

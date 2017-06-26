@@ -13,7 +13,7 @@ class Factory
      * @param Parser|null $parser
      * @return Annotation
      */
-    public static function create(Parser $parser = null) : Annotation
+    public static function create(Parser $parser = null)
     {
         if (null === $parser) {
             $parser = new Parser();
