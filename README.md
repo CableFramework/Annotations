@@ -3,7 +3,7 @@ PHP Annonations library for cable framework
 
 ## Requirements
 
-PHP 7.1+
+PHP 5.6+
 
 ## Installation
 
@@ -32,7 +32,7 @@ $annotation = Factory::create();
  * @Name("Test") the name of command
  *
  */
-class TestCommand{
+class TestCommand extends Command{
 
 
      /**

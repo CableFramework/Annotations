@@ -68,7 +68,7 @@ class Annotation
      *
      * @return $this
      */
-    public function addCommand($command)
+    public function addCommand(Command $command)
     {
         if (is_string($command)) {
             $command = new $command;
