@@ -118,7 +118,6 @@ class ExecutedBag implements \Iterator
     {
         $key = key($this->objects);
         return ($key !== NULL && $key !== FALSE);
-
     }
 
     /**
