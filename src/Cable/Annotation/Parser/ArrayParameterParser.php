@@ -40,7 +40,7 @@ class ArrayParameterParser implements ParserInterface
     {
         $matches = $this->matches;
 
-        $parameters = new ParameterGroupParser($matches[0], $matches[2], ':');
+        $parameters = new ParameterGroupParser($matches[0], $matches[2], ':', '|||');
         $resolved = $parameters->parse();
 
         if ($matches['function'] !== '') {

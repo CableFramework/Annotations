@@ -25,16 +25,23 @@ class ParameterGroupParser implements ParserInterface
     private $command;
 
     /**
+     * @var string
+     */
+    private $exploder;
+
+    /**
      * ParameterParser constructor.
      * @param string $command
      * @param string $parameters
      * @param string $parser
+     * @param string $exploder
      */
-    public function __construct($command,$parameters,$parser = '=')
+    public function __construct($command,$parameters,$parser = '=', $exploder = ',')
     {
         $this->command = $command;
         $this->parameters = $parameters;
         $this->parser = $parser;
+        $this->exploder = $exploder;
     }
 
     /**
@@ -42,7 +49,13 @@ class ParameterGroupParser implements ParserInterface
      */
     public function parse()
     {
-        $parameters = explode(',', $this->parameters);
+        if ($this->exploder === ','){
+            $parameters = preg_replace_callback('#{(.*?)}#', array($this, 'callback'), $this->parameters);
+            $parameters = explode(',', $parameters);
+        }else{
+            $parameters = explode($this->exploder, $this->parameters);
+        }
+
 
         $bag = new ParameterBag();
 
@@ -56,5 +69,9 @@ class ParameterGroupParser implements ParserInterface
         }
 
         return $bag;
+    }
+
+    public function callback(array  $matched){
+        return str_replace(',', '|||', $matched[0]);
     }
 }
