@@ -199,7 +199,7 @@ class Parser implements DocumentedParserInterface
      */
     public function checkCommentIsValid()
     {
-        if ($this->document === '') {
+        if ($this->document === '' || !$this->document) {
             return;
         }
 
