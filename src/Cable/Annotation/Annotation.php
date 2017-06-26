@@ -173,10 +173,7 @@ class Annotation
 
 
                 foreach ($executed as $item => $values) {
-                    $setting[$item][] = array(
-                        'from' => $method->getDeclaringClass()->getName() . '::' . $method->getName(),
-                        'value' => $values
-                    );
+                    $setting[$method->getName()][$item][] = $values;
                 }
             }
 
@@ -209,12 +206,7 @@ class Annotation
                 $executed = $this->executeProperty($property);
 
                 foreach ($executed as $item => $values) {
-                    $setting[$item][] = array(
-                        'from' =>
-                            $property->getDeclaringClass()
-                                ->getName() . '->' . $property->getName(),
-                        'value' => $values
-                    );
+                    $setting[$property->getName()][$item][] = $values;
                 }
             }
 

@@ -4,7 +4,6 @@ namespace Cable\Annotation\Mapping;
 
 
 use Cable\Annotation\DocumentedParserInterface;
-use Cable\Annotation\Mapping\Command\Name;
 use Cable\Annotation\Parser\Exception\ParserException;
 use Cable\Annotation\Parser\ParserInterface;
 use Cable\Annotation\SetterInterface;
@@ -159,7 +158,7 @@ class CommandMapping implements MappingInterface
         }
 
         // if there is no class setter we will use property setters
-        if(null === $this->classSetter){
+        if(false === $this->classSetter){
             if (!isset($parsed['Setter'])) {
                 $parsed['Setter'][0][0] = 'set' . mb_convert_case($name, MB_CASE_TITLE);
             }

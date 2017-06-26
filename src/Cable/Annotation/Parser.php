@@ -134,11 +134,16 @@ class Parser implements DocumentedParserInterface
         $lines = $this->filterEmptyLines($lines);
 
 
-        return $this->directParse(
+        $parsed = $this->directParse(
             $this->cleanWildcard(
                 implode(PHP_EOL, $lines)
             )
         );
+
+        $this->document = null;
+
+
+        return $parsed;
     }
 
     /**
