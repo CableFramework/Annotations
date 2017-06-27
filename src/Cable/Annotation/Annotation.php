@@ -85,7 +85,7 @@ class Annotation
 
 
     /**
-     * @param \ReflectionMethod $method
+     * @param \ReflectionFunctionAbstract $method
      *
      * @throws CommandNotFoundException
      * @throws RequiredArgumentException
@@ -93,7 +93,7 @@ class Annotation
      * @throws ParserException
      * @return array
      */
-    public function executeMethod(\ReflectionMethod $method)
+    public function executeMethod(\ReflectionFunctionAbstract $method)
     {
 
         return $this->parse($method->getDocComment())
