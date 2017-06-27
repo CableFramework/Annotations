@@ -88,7 +88,7 @@ class ParameterParser implements ParserInterface
 
         return
             [
-                is_string($name) ? trim($name) : $name,
+                is_string($name) ? $this->getCleanedValue(trim($name)) : $name,
                 $this->getCleanedValue($value)
             ];
     }
