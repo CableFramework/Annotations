@@ -4,12 +4,15 @@
 namespace Cable\Annotation;
 
 use Cable\Annotation\Mapping\CommandMapping;
-use Cable\Annotation\Mapping\MappedProperty;
 use Cable\Annotation\Parser\AnnotationParser;
 use Cable\Annotation\Parser\Exception\ParserException;
 use Cable\Annotation\Parser\ParserInterface;
 use Psr\Container\ContainerInterface;
 
+/**
+ * Class Annotation
+ * @package Cable\Annotation
+ */
 class Annotation
 {
 
